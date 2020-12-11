@@ -30,4 +30,20 @@ func (s *TypesSuite) TestUUID() {
 		s.Equal(uid.Hex(), uid2.Hex())
 		s.Equal(uid.String(), uid2.String())
 	}
+
+	// Empty values
+
+	s.True(typex.ZeroUUID.IsEmpty())
+	s.Empty(typex.ZeroUUID.Hex())
+	s.Empty(typex.ZeroUUID.String())
+
+	uid = typex.UUID([]byte("wtf"))
+	s.True(uid.IsEmpty())
+	s.Empty(uid.Hex())
+	s.Empty(uid.String())
+
+	var wtf typex.UUID
+	s.True(wtf.IsEmpty())
+	s.Empty(wtf.Hex())
+	s.Empty(wtf.String())
 }

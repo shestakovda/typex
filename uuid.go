@@ -1,6 +1,7 @@
 package typex
 
 import (
+	"bytes"
 	"encoding/hex"
 	"strings"
 
@@ -9,6 +10,9 @@ import (
 )
 
 const hyphen = "-"
+
+// ZeroUUID - пустой UUID, 16 нулей
+var ZeroUUID = make(UUID, 16)
 
 var (
 	ErrUUIDInvalid = errx.New("invalid uuid")
@@ -47,15 +51,33 @@ func ParseUUID(id string) (_ UUID, err error) {
 }
 
 func (u UUID) String() string {
+	if u.IsEmpty() {
+		return ""
+	}
 	return strings.Join([]string{
 		hex.EncodeToString(u[:4]),
 		hex.EncodeToString(u[4:6]),
 		hex.EncodeToString(u[6:8]),
 		hex.EncodeToString(u[8:10]),
-		hex.EncodeToString(u[10:]),
+		hex.EncodeToString(u[10:16]),
 	}, hyphen)
 }
 
 func (u UUID) Hex() string {
+	if u.IsEmpty() {
+		return ""
+	}
 	return hex.EncodeToString(u)
+}
+
+func (u UUID) IsEmpty() bool {
+	if len(u) < 16 {
+		return true
+	}
+
+	if bytes.Equal(u, ZeroUUID) {
+		return true
+	}
+
+	return false
 }
